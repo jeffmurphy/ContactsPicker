@@ -4,7 +4,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--View Controller - Contacts Picker-->
         <scene sceneID="0dc-WC-Otb">
             <objects>
                 <viewController id="sJV-eW-tjT" customClass="ViewController" sceneMemberID="viewController">
@@ -14,7 +14,7 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Be9-5a-jIl">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Button">
+                                <state key="normal" title="Click Me">
                                     <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -25,7 +25,7 @@
                                     <segue destination="0Hz-J2-UDU" kind="push" identifier="SegueToContactPicker" id="M1v-4V-VaV"/>
                                 </connections>
                             </button>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Click the button." translatesAutoresizingMaskIntoConstraints="NO" id="ToW-Ys-Wuq">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ToW-Ys-Wuq">
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="399" id="B8l-JQ-MlU"/>
@@ -43,7 +43,7 @@
                             <constraint firstItem="Be9-5a-jIl" firstAttribute="centerX" secondItem="ToW-Ys-Wuq" secondAttribute="centerX" type="default" id="vJT-PU-KCs"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="935-NQ-Qts"/>
+                    <navigationItem key="navigationItem" title="Contacts Picker" id="935-NQ-Qts"/>
                     <connections>
                         <outlet property="tv" destination="ToW-Ys-Wuq" id="SQs-ls-d8H"/>
                     </connections>
@@ -101,9 +101,26 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="1XC-td-ZTc" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="496" y="258"/>
+            <point key="canvasLocation" x="842" y="648"/>
         </scene>
     </scenes>
+    <classes>
+        <class className="ContactPickerViewController" superclassName="UITableViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ContactPickerViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="doneButtonPressed:"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="tv" candidateClass="UITextView"/>
+            </relationships>
+        </class>
+    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

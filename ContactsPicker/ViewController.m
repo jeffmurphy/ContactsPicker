@@ -19,14 +19,17 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString:@"SegueToContactPicker"])
     {
-        NSLog(@"Going to ContactPicker");
+        self.tv.text = nil;
         [[segue destinationViewController] setDelegate:self];
     }
 }
 
 - (void)contactPickerDoneWithResults:(NSArray *)results
 {
-    NSLog(@"%@", results);
+    for (NSString *email in results) {
+        self.tv.text = [self.tv.text stringByAppendingString:email];
+        self.tv.text = [self.tv.text stringByAppendingString:@"\n"];
+    }
 }
 
 - (void)viewDidLoad

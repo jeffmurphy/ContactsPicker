@@ -24,6 +24,9 @@
 		7D1A645B17692E2600CA4AB2 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D1A643317692E2600CA4AB2 /* Foundation.framework */; };
 		7D1A646317692E2600CA4AB2 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 7D1A646117692E2600CA4AB2 /* InfoPlist.strings */; };
 		7D1A646617692E2600CA4AB2 /* ContactsPickerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D1A646517692E2600CA4AB2 /* ContactsPickerTests.m */; };
+		7D1A64711769309700CA4AB2 /* ContactPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D1A64701769309700CA4AB2 /* ContactPickerViewController.m */; };
+		7D1A64721769309700CA4AB2 /* ContactPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7D1A64701769309700CA4AB2 /* ContactPickerViewController.m */; };
+		7D1A64741769316300CA4AB2 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D1A64731769316300CA4AB2 /* AddressBook.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +63,9 @@
 		7D1A646217692E2600CA4AB2 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		7D1A646417692E2600CA4AB2 /* ContactsPickerTests.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactsPickerTests.h; sourceTree = "<group>"; };
 		7D1A646517692E2600CA4AB2 /* ContactsPickerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ContactsPickerTests.m; sourceTree = "<group>"; };
+		7D1A646F1769309700CA4AB2 /* ContactPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactPickerViewController.h; sourceTree = "<group>"; };
+		7D1A64701769309700CA4AB2 /* ContactPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactPickerViewController.m; sourceTree = "<group>"; };
+		7D1A64731769316300CA4AB2 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D1A64741769316300CA4AB2 /* AddressBook.framework in Frameworks */,
 				7D1A643217692E2600CA4AB2 /* UIKit.framework in Frameworks */,
 				7D1A643417692E2600CA4AB2 /* Foundation.framework in Frameworks */,
 				7D1A643617692E2600CA4AB2 /* CoreGraphics.framework in Frameworks */,
@@ -89,6 +96,7 @@
 		7D1A642517692E2600CA4AB2 = {
 			isa = PBXGroup;
 			children = (
+				7D1A64731769316300CA4AB2 /* AddressBook.framework */,
 				7D1A643717692E2600CA4AB2 /* ContactsPicker */,
 				7D1A645E17692E2600CA4AB2 /* ContactsPickerTests */,
 				7D1A643017692E2600CA4AB2 /* Frameworks */,
@@ -119,6 +127,8 @@
 		7D1A643717692E2600CA4AB2 /* ContactsPicker */ = {
 			isa = PBXGroup;
 			children = (
+				7D1A646F1769309700CA4AB2 /* ContactPickerViewController.h */,
+				7D1A64701769309700CA4AB2 /* ContactPickerViewController.m */,
 				7D1A644017692E2600CA4AB2 /* AppDelegate.h */,
 				7D1A644117692E2600CA4AB2 /* AppDelegate.m */,
 				7D1A644917692E2600CA4AB2 /* MainStoryboard_iPhone.storyboard */,
@@ -277,6 +287,7 @@
 				7D1A643E17692E2600CA4AB2 /* main.m in Sources */,
 				7D1A644217692E2600CA4AB2 /* AppDelegate.m in Sources */,
 				7D1A645117692E2600CA4AB2 /* ViewController.m in Sources */,
+				7D1A64711769309700CA4AB2 /* ContactPickerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +296,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7D1A646617692E2600CA4AB2 /* ContactsPickerTests.m in Sources */,
+				7D1A64721769309700CA4AB2 /* ContactPickerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
