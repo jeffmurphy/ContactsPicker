@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ContactPickerViewController.h"
 
-@interface ViewController : UIViewController
+@interface ViewController : UIViewController <ContactPickerDelegate>
 
 @end

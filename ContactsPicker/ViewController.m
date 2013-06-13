@@ -10,9 +10,24 @@
 
 @interface ViewController ()
 
+@property (nonatomic, retain) IBOutlet UITextView *tv;
+
 @end
 
 @implementation ViewController
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    if ([segue.identifier isEqualToString:@"SegueToContactPicker"])
+    {
+        NSLog(@"Going to ContactPicker");
+        [[segue destinationViewController] setDelegate:self];
+    }
+}
+
+- (void)contactPickerDoneWithResults:(NSArray *)results
+{
+    NSLog(@"%@", results);
+}
 
 - (void)viewDidLoad
 {
