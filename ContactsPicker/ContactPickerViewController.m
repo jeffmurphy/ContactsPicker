@@ -16,6 +16,7 @@
 @property (nonatomic, retain) NSMutableArray *selected;
 @property (nonatomic, retain) NSMutableArray *emails;
 @property (nonatomic, retain) NSMutableDictionary *countByFirstLetterOfLastName;
+@property (nonatomic, retain) NSMutableArray *sectionOffset;
 @property (nonatomic, retain) NSArray *AB;
 
 @end
@@ -38,12 +39,28 @@
 
 - (void) tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.selected setObject:[NSNumber numberWithInt:0] atIndexedSubscript:[indexPath row]];
+    NSNumber *offset = [NSNumber numberWithInt:0];
+    
+    if ([indexPath section] > 0) {
+        offset = [self.sectionOffset objectAtIndex:[indexPath section]-1];
+    }
+    int element = [offset intValue] + [indexPath row];
+
+    
+    [self.selected setObject:[NSNumber numberWithInt:0] atIndexedSubscript:element];
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.selected setObject:[NSNumber numberWithInt:1] atIndexedSubscript:[indexPath row]];
+    NSNumber *offset = [NSNumber numberWithInt:0];
+    
+    if ([indexPath section] > 0) {
+        offset = [self.sectionOffset objectAtIndex:[indexPath section]-1];
+    }
+    int element = [offset intValue] + [indexPath row];
+
+    
+    [self.selected setObject:[NSNumber numberWithInt:1] atIndexedSubscript:element];
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -66,10 +83,18 @@
 {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"MyCell" forIndexPath:indexPath];
     
+    NSNumber *offset = [NSNumber numberWithInt:0];
     
-    NSString *fn = [self.firstNames objectAtIndex:[indexPath row]];
-    NSString *ln = [self.lastNames objectAtIndex:[indexPath row]];
-    NSNumber *s = [self.selected objectAtIndex:[indexPath row]];
+    if ([indexPath section] > 0) {
+        offset = [self.sectionOffset objectAtIndex:[indexPath section]-1];
+    }
+    
+    //NSLog(@"section %d offset %d", [indexPath section], [offset intValue]);
+    
+    int element = [offset intValue] + [indexPath row];
+    NSString *fn = [self.firstNames objectAtIndex:element];
+    NSString *ln = [self.lastNames objectAtIndex:element];
+    NSNumber *s = [self.selected objectAtIndex:element];
     
     NSString *celltext = [[NSString alloc] initWithFormat:@"%@ %@", ln, fn, nil];
 
@@ -94,6 +119,7 @@
     if ([self.delegate respondsToSelector:@selector(contactPickerDoneWithResults:)]) {
         NSMutableArray *rv = [[NSMutableArray alloc] init];
         int idx = 0;
+        
         for (NSNumber *val in self.selected) {
             if ([val intValue] == 1) {
                 [rv addObject:[self.emails objectAtIndex:idx]];
@@ -151,14 +177,14 @@
     
     
     if (accessGranted) {
-        
-        NSArray *thePeople = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(addressBook);
-        // Do whatever you need with thePeople...
-        
+        ABRecordRef source = ABAddressBookCopyDefaultSource(addressBook);
+        NSArray *thePeople = (__bridge NSArray*)ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(addressBook, source, kABPersonSortByLastName);
+
         self.emails = [[NSMutableArray alloc] init];
         self.lastNames = [[NSMutableArray alloc] init];
         self.firstNames = [[NSMutableArray alloc] init];
         self.selected = [[NSMutableArray alloc] init];
+        self.sectionOffset = [[NSMutableArray alloc] init];
                 
         // http://stackoverflow.com/questions/2613045/reading-email-address-from-contacts-fails-with-weird-memory-issue
         
@@ -181,38 +207,55 @@
         
         for (peopleCounter = 0;peopleCounter < [thePeople count]; peopleCounter++) {
             ABRecordRef thisPerson = (__bridge ABRecordRef) [thePeople objectAtIndex:peopleCounter];
-            //NSString *name = (__bridge_transfer NSString *) ABRecordCopyCompositeName(thisPerson);
             
-            NSString *firstName = (__bridge NSString *)ABRecordCopyValue(thisPerson, kABPersonFirstNameProperty);
-            NSString *lastName = (__bridge NSString *)ABRecordCopyValue(thisPerson,
-                                                                        kABPersonLastNameProperty);
-            
-            ABMultiValueRef multi =  ABRecordCopyValue(thisPerson, kABPersonEmailProperty);
-            CFIndex emailCount = ABMultiValueGetCount(multi);
-
-            if (emailCount > 0) {
-                // we only take the first email found
-                CFStringRef emailRef = ABMultiValueCopyValueAtIndex(multi, 0);
-                [self.emails addObject:(__bridge NSString *)emailRef];
-                [self.lastNames addObject:lastName];
-                [self.firstNames addObject:firstName];
-                [self.selected addObject:[NSNumber numberWithInt:0]];
+            if (ABRecordCopyValue(thisPerson, kABPersonKindProperty) == kABPersonKindPerson) {
+                //NSString *name = (__bridge_transfer NSString *) ABRecordCopyCompositeName(thisPerson);
                 
-                NSString *fl;
-                if (firstName)
-                    fl = [firstName substringToIndex:1];
-                if (lastName)
-                    fl = [lastName substringToIndex:1];
+                NSString *firstName = (__bridge NSString *)ABRecordCopyValue(thisPerson, kABPersonFirstNameProperty);
+                NSString *lastName = (__bridge NSString *)ABRecordCopyValue(thisPerson,
+                                                                            kABPersonLastNameProperty);
                 
-                NSNumber *cc = [self.countByFirstLetterOfLastName objectForKey:[fl uppercaseString]];
-                int _cc = [cc intValue] + 1;
-                [self.countByFirstLetterOfLastName setObject:[NSNumber numberWithInt:_cc] forKey:[fl uppercaseString]];
+                ABMultiValueRef multi =  ABRecordCopyValue(thisPerson, kABPersonEmailProperty);
+                CFIndex emailCount = ABMultiValueGetCount(multi);
                 
-                //NSLog(@"Name = %@ %@ -- %@ -- %d", lastName, firstName, (__bridge NSString *)emailRef, _cc);
-
-
-                
+                if (emailCount > 0) {
+                    // we only take the first email found
+                    CFStringRef emailRef = ABMultiValueCopyValueAtIndex(multi, 0);
+                    if (emailRef != nil) {
+                        [self.emails addObject:(__bridge NSString *)emailRef];
+                        if (lastName)
+                            [self.lastNames addObject:lastName];
+                        else
+                            [self.lastNames addObject:@""];
+                        if (firstName)
+                            [self.firstNames addObject:firstName];
+                        else
+                            [self.firstNames addObject:@""];
+                        [self.selected addObject:[NSNumber numberWithInt:0]];
+                        
+                        NSString *fl = nil;
+                        if (firstName)
+                            fl = [firstName substringToIndex:1];
+                        if (lastName)
+                            fl = [lastName substringToIndex:1];
+                        
+                        if (fl) {
+                            NSNumber *cc = [self.countByFirstLetterOfLastName objectForKey:[fl uppercaseString]];
+                            int _cc = [cc intValue] + 1;
+                            [self.countByFirstLetterOfLastName setObject:[NSNumber numberWithInt:_cc] forKey:[fl uppercaseString]];
+                        }
+                        //NSLog(@"Name = %@ %@ -- %@", lastName, firstName, (__bridge NSString *)emailRef);
+                    }
+                    
+                }
             }
+        }
+        
+        int sum = 0;
+        for (NSString *flln in self.AB) {
+            NSNumber *cc = [self.countByFirstLetterOfLastName objectForKey:flln];
+            sum += [cc intValue];
+            [self.sectionOffset addObject:[NSNumber numberWithInt:sum]];
         }
     }
     
